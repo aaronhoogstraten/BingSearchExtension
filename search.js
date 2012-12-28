@@ -3,6 +3,7 @@ var stop = 0;
 var wndId ;
 var wnd;
 var numSearches = 93;
+var numMaxOpenTabs = 1; 
 var resetSearches = numSearches;
 
 chrome.browserAction.onClicked.addListener(function(tab) {
@@ -17,12 +18,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	{
 		stop = 1;
 		//Do first search when window opened
-		var searchURL = "http://www.bing.com/search?q=";
-		for(j=0;j<4;j++)
-		{
-			var rnd=Math.floor(Math.random()*(90-65))+66;
-			searchURL = searchURL + String.fromCharCode(rnd);
-		}
+		var searchURL = GenerateSearchURL();
+
 		numSearches--;
 		chrome.windows.create({'url':searchURL, 'focused':false},function(win){
 				wndId = win.id;
@@ -50,8 +47,6 @@ function StartSearches()
 {
 	//alert(wndId);
 	timer = setInterval(CreateTabs,1500); 
-	
-	
 }
 
 function CreateTabs()
@@ -59,19 +54,23 @@ function CreateTabs()
 	//One search has already been performed on window open
 	if(numSearches>0)
 	{
-		var searchURL = "http://www.bing.com/search?q=";
-		for(j=0;j<4;j++)
-		{
-			var rnd=Math.floor(Math.random()*(90-65))+66;
-			searchURL = searchURL + String.fromCharCode(rnd);
-		}
-		
+		//Close all completed searches at the max number tab threshold
+		chrome.tabs.getAllInWindow(wndId, function(tabs)
+        {
+        	if(tabs.length >= numMaxOpenTabs)
+        	{
+	            for (i in tabs)
+	            {
+	            	if(tabs[i].status == "complete")
+	            	{
+	            		chrome.tabs.remove(tabs[i].id);
+	            	}
+	            }
+	        }
+        });
+
+		var searchURL = GenerateSearchURL();
 		chrome.tabs.create({url:searchURL, windowId:wndId});
-		//window:wnd.open(searchURL,"_self");
-		// chrome.tabs.get(window:wnd.tabs[0].id,function(tab){
-		// 	tab.url = searchURL;
-		// });
-		//window:wnd.tabs[0].url 
 		numSearches--;
 	}
 	else
@@ -79,4 +78,17 @@ function CreateTabs()
 		clearInterval(timer);
 	}
 	
+}
+
+function GenerateSearchURL()
+{
+	var searchURL = "http://www.bing.com/search?q=";
+	
+	for(j=0;j<4;j++)
+	{
+		var rnd=Math.floor(Math.random()*(90-65))+66;
+		searchURL = searchURL + String.fromCharCode(rnd);
+	}
+
+	return searchURL;
 }
