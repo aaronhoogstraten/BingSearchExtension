@@ -2,6 +2,7 @@
   "name": "Bing Search Extension",
   "version": "1.0",
   "manifest_version": 2,
+  "options_page": "options.html",
   "description": "Bing Rewards auto search script.",
   "browser_action": {
 	"default_icon": "icon.png"

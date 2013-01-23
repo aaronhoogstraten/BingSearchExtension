@@ -2,21 +2,28 @@ var timer;
 var stop = 0; 
 var wndId ;
 var wnd;
-var numSearches = 93;
+var delayTime = 1500;
+var numSearches = 30;
 var numMaxOpenTabs = 1; 
 var resetSearches = numSearches;
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-	
+	delayTime = localStorage["delay_time"]*1000;
+	if(isNaN(delayTime))
+		delayTime = 1500; //default
+
 	if(numSearches == 0)
 	{
 		stop = 0;
-		numSearches = resetSearches;
 	}
 
 	if(stop == 0)
 	{
 		stop = 1;
+		numSearches = localStorage["num_searches"]
+		if(isNaN(numSearches))
+			numSearches = 30; //default
+
 		//Do first search when window opened
 		var searchURL = GenerateSearchURL();
 
@@ -46,7 +53,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 function StartSearches()
 {
 	//alert(wndId);
-	timer = setInterval(CreateTabs,1500); 
+	timer = setInterval(CreateTabs,delayTime); 
 }
 
 function CreateTabs()
