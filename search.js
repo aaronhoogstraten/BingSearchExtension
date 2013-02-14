@@ -90,11 +90,11 @@ function CreateTabs()
 function GenerateSearchURL()
 {
 	var searchURL = "http://www.bing.com/search?q=";
+	var alphabet ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	for(j=0;j<4;j++)
 	{
-		var rnd=Math.floor(Math.random()*(90-65))+66;
-		searchURL = searchURL + String.fromCharCode(rnd);
+		searchURL = searchURL + alphabet.charAt(Math.floor(Math.random() * alphabet.length));
 	}
 
 	return searchURL;
