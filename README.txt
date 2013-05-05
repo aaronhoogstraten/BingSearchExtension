@@ -5,6 +5,10 @@ Click the icon once to start, second time to pause, third time to resume. If the
 
 
 Installation:
+Download and open the .crx file from the repository
+
+**OR** if you want to load the unpacked extension for your own tinkering:
+
 (from http://developer.chrome.com/extensions/getstarted.html)
 
 Load the extension.

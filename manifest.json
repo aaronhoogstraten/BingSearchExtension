@@ -1,6 +1,6 @@
 {
-  "name": "Bing Search Extension",
-  "version": "1.0",
+  "name": "Bing Rewards Search Extension",
+  "version": "1.2",
   "manifest_version": 2,
   "options_page": "options.html",
   "description": "Bing Rewards auto search script.",
