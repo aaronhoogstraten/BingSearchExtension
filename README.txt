@@ -5,7 +5,7 @@ Click the icon once to start, second time to pause, third time to resume. If the
 
 
 Installation:
-Download and .crx file from the repository and then drag it into a chrome window to install.
+Download and .crx file from the repository. Open the Chrome Extensions page (chrome://extensions/) then drag the .crx file on to the Extensions page to install.
 
 **OR** if you want to load the unpacked extension for your own tinkering:
 

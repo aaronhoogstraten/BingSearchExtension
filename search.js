@@ -77,7 +77,7 @@ function CreateTabs()
         });
 
 		var searchURL = GenerateSearchURL();
-		chrome.tabs.create({url:searchURL, windowId:wndId});
+		chrome.tabs.create({url:searchURL, windowId:wndId, active:false});
 		numSearches--;
 	}
 	else
