@@ -8,7 +8,9 @@ var numMaxOpenTabs = 1;
 var resetSearches = numSearches;
 
 chrome.browserAction.onClicked.addListener(function(tab) {
+	
 	delayTime = localStorage["delay_time"]*1000;
+	
 	if(isNaN(delayTime))
 		delayTime = 1500; //default
 
@@ -20,7 +22,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	if(stop == 0)
 	{
 		stop = 1;
-		numSearches = localStorage["num_searches"]
+		numSearches = localStorage["num_searches"];
 		if(isNaN(numSearches))
 			numSearches = 30; //default
 
@@ -28,9 +30,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		var searchURL = GenerateSearchURL();
 
 		numSearches--;
-		chrome.windows.create({'url':searchURL, 'focused':false},function(win){
+		chrome.windows.create({'url': searchURL, 'focused': false}, function(win){
 				wndId = win.id;
 				wnd = win;
+				chrome.windows.update(win.id, {'top': 0, 'left': 0, 'width': screen.availWidth});
 				chrome.windows.update(win.id, {'state': "minimized"});
 		});
 		StartSearches();
@@ -53,7 +56,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 function StartSearches()
 {
 	//alert(wndId);
-	timer = setInterval(CreateTabs,delayTime); 
+	timer = setInterval(CreateTabs, delayTime); 
 }
 
 function CreateTabs()
