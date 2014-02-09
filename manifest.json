@@ -1,6 +1,6 @@
 {
   "name": "Bing Rewards Search Extension",
-  "version": "1.2",
+  "version": "1.3",
   "manifest_version": 2,
   "options_page": "options.html",
   "description": "Bing Rewards auto search script.",
@@ -11,6 +11,7 @@
     "scripts": ["search.js"]
   },
   "permissions": [
-    "tabs"
+    "tabs",
+    "debugger"
   ]
 }

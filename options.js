@@ -4,6 +4,10 @@ function save_options()
   var numSearches = input.value;
   localStorage["num_searches"] = numSearches;
 
+  input = document.getElementById("nummobilesearches");
+  var numMobileSearches = input.value;
+  localStorage["num_mobile_searches"] = numMobileSearches;
+
   input = document.getElementById("delaytime");
   var delayTime = input.value;
   localStorage["delay_time"] = delayTime;
@@ -20,12 +24,15 @@ function save_options()
 function restore_options() 
 {
   var numSearches = localStorage["num_searches"];
+  var numMobileSearches = localStorage["num_mobile_searches"];
   var delayTime = localStorage["delay_time"];
-  if (!numSearches || !delayTime) 
+  if (!numSearches || !numMobileSearches || !delayTime) 
     return;
 
   var input = document.getElementById("numsearches");
   input.value = numSearches;
+  input = document.getElementById("nummobilesearches");
+  input.value = numMobileSearches;
   input = document.getElementById("delaytime");
   input.value = delayTime;
 }
