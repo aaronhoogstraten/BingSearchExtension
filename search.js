@@ -9,12 +9,101 @@ var numMaxOpenTabs = 1;
 var resetSearches = numSearches;
 var bIsMobileSearching = false;
 var MobileTabId = -1;
-
+var bEnableAutoSearch = false;
 
 chrome.browserAction.onClicked.addListener(function(tab) {
+	HandleClick();
+});
+
+chrome.runtime.onStartup.addListener(function(){
+	CheckTimeStampForAutoSearch();
+});
+
+
+chrome.runtime.onInstalled.addListener(function(details){
+	CheckTimeStampForAutoSearch();
+});
+
+function CheckTimeStampForAutoSearch()
+{
+	//Sanitize user input if needed;
+	if(localStorage["auto_search"] > 1)
+		localStorage["auto_search"] = 1;
+	else if(localStorage["auto_search"] < 0)
+		localStorage["auto_search"] = 0;
+
+	bEnableAutoSearch = localStorage["auto_search"];
+
+	if(bEnableAutoSearch == false)
+		return;
+
+	var lastTimeStamp = localStorage["last_timestamp"];
+	var CurrentDate = new Date();
+	var currentTimeStamp = CurrentDate.getTime();
 	
+	//No previous timestamp saved
+	if(isNaN(lastTimeStamp))
+	{
+		localStorage["last_timestamp"] = currentTimeStamp;
+		InitNewSearches();
+	}
+	else //Check if we have done searches today
+	{
+		//Sanitize user input if needed
+		if(localStorage["search_hour"] > 23)
+			localStorage["search_hour"] = 23;
+		else if(localStorage["search_hour"] < -1)
+			localStorage["search_hour"] = -1;
+
+		if(localStorage["search_minute"] > 59)
+			localStorage["search_minute"] = 59;
+		else if(localStorage["search_minute"] < -1)
+			localStorage["search_minute"] = -1;
+
+		var TargetHour = localStorage["search_hour"];
+		var TargetMinutes = localStorage["search_minute"];
+		var LastDate = new Date(+lastTimeStamp);
+		var timeLeft = 0;
+
+		var bDidSearchToday = LastDate.getDate() == CurrentDate.getDate(); //Assume the user won't wait to open Chrome until the same date next month... or year...
+		var bUseTargetTime = TargetHour > -1 && TargetMinutes > -1;
+
+		if(!bDidSearchToday)
+		{
+			if(bUseTargetTime)
+			{
+				if(CurrentDate.getHours() >= TargetHour && CurrentDate.getMinutes() >= TargetMinutes)
+					InitNewSearches();
+				else
+					timeLeft = (new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), CurrentDate.getDate(), TargetHour, TargetMinutes, 0, 0)).getTime() - currentTimeStamp; //Wait until the target time to try again
+			}
+			else
+			{
+				InitNewSearches();
+			}
+		}
+		else
+		{
+			var waitHour = TargetHour > -1 ? TargetHour : 0;
+			var waitMinute = TargetMinutes > -1 ? TargetMinutes: 0;
+			timeLeft = (new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), CurrentDate.getDate()+1, waitHour, waitMinute, 0, 0)).getTime() - currentTimeStamp; //Wait until the next day
+		}
+
+		if(timeLeft > 0)
+			timer = setInterval(CheckTimeStampForAutoSearch, timeLeft); //Check again at the end of the remaining time to the next day
+	}
+}
+
+function InitNewSearches()
+{	
+	stop = 0;
+	HandleClick();
+}
+
+function HandleClick()
+{
 	delayTime = localStorage["delay_time"]*1000;
-	
+
 	if(isNaN(delayTime))
 		delayTime = 1500; //default
 
@@ -25,6 +114,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 	if(stop == 0) //Start
 	{
+		clearInterval(timer);
+		localStorage["last_timestamp"] = (new Date()).getTime();	//Save the current timestamp at the beginning of searches
+
 		stop = 1;
 		numSearches = localStorage["num_searches"];
 		if(isNaN(numSearches))
@@ -62,13 +154,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 		stop = 1;
 	}
-	
-});
-
+}
 
 function StartSearches()
 {
-	//alert(wndId);
 	timer = setInterval(CreateTabs, delayTime); 
 }
 
@@ -128,7 +217,6 @@ function UpdateMobileTab()
 
 function StartMobileSearches()
 {
-	alert("StartMobileSearches");
 	timer = setInterval(UpdateMobileTab, delayTime);
 }
 

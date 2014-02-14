@@ -8,6 +8,11 @@ Number of searches: <input type="number" id="numsearches" name="numberofsearches
 Number of mobile searches: <input type="number" id="nummobilesearches" name="numberofmobilesearches" min="1" value="20">
 <br>
 Delay between searches(sec) : <input type="number" id="delaytime" name="delaybtwnsearches" min="0.1" step="0.1" value="1.5">
+<br>
+Enable auto search once every 24hr(0=off, 1=on): <input type="number" id="autosearch" name="enableautosearch" min="0" max="1" step="1" value="0">
+<br>
+Target search hour(-1=off, 0-23=on): <input type="number" id="searchhour" name="setsearchhour" min="-1" max="23" step="1" value="-1">
+Target search minute(-1=off, 0-59=on): <input type="number" id="searchminute" name="setsearchminute" min="-1" max="59" step="1" value="-1">
 
 <br>
 <div id="status"></div>
