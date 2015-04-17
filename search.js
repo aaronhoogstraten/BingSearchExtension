@@ -95,7 +95,8 @@ function CheckTimeStampForAutoSearch()
 }
 
 function InitNewSearches()
-{	
+{
+	numSearches = 0;	
 	stop = 0;
 	HandleClick();
 }
@@ -185,7 +186,7 @@ function CreateTabs()
 		chrome.tabs.create({url:searchURL, windowId:wndId, active:false});
 		numSearches--;
 	}
-	else
+	else //Finished regular searches
 	{
 		clearInterval(timer);
 		InitMobileSearches();
@@ -209,9 +210,10 @@ function UpdateMobileTab()
 
 		});
 	}
-	else
+	else //Finished mobiles searches
 	{
 		clearInterval(timer);
+		CheckTimeStampForAutoSearch(); //start checking for next autosearch
 	}
 }
 
