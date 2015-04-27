@@ -212,8 +212,12 @@ function UpdateMobileTab()
 	}
 	else //Finished mobiles searches
 	{
-		clearInterval(timer);
-		CheckTimeStampForAutoSearch(); //start checking for next autosearch
+		//Reload the whole extension to make sure the states get reset properly
+		chrome.runtime.reload();
+		//MobileTabId = -1;
+		//bIsMobileSearching = false;
+		//clearInterval(timer);
+		//CheckTimeStampForAutoSearch(); //start checking for next autosearch
 	}
 }
 
@@ -240,7 +244,7 @@ function InitMobileSearches()
         }
     });
 
-	if(MobileTabId == -1)
+	if(MobileTabId < 0)
 	{
 		timer = setInterval(InitMobileSearches, 0.5);
 	}
